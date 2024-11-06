@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless CV API
+Resources:
+  JerseySampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: co.cyte.web.cvapi.handler.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: s3://s3poc1/823edda9d4f25dda8e970c39394f4f27
+      MemorySize: 512
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - AWSLambdaBasicExecutionRole
+      - AWSLambda_ReadOnlyAccess
+      - AWSXrayWriteOnlyAccess
+      - AWSLambdaVPCAccessExecutionRole
+      - AmazonS3FullAccess
+      - SecretsManagerReadWrite
+      Timeout: 120
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+  CvRDSSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: CvRDSSecret
+      Description: This is a Secrets Manager secret for an RDS DB instance
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "superuser2"}'
+        GenerateStringKey: password
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+  CvRDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      DBInstanceClass: db.t2.micro
+      Engine: mysql
+      MasterUsername:
+        Fn::Join:
+        - ''
+        - - '{{resolve:secretsmanager:'
+          - Ref: CvRDSSecret
+          - :SecretString:username}}
+      MasterUserPassword:
+        Fn::Join:
+        - ''
+        - - '{{resolve:secretsmanager:'
+          - Ref: CvRDSSecret
+          - :SecretString:password}}
+      BackupRetentionPeriod: 0
+      DBName: CV
+      PubliclyAccessible: true
+  SecretRDSInstanceAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId:
+        Ref: CvRDSSecret
+      TargetId:
+        Ref: CvRDSInstance
+      TargetType: AWS::RDS::DBInstance
+  ConfigSecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: ConfigSecrets
+      Description: The install pass and access token.
+      GenerateSecretString:
+        SecretStringTemplate: '{"installPassword": "changeit"}'
+        GenerateStringKey: accessToken
+        PasswordLength: 30
+        ExcludePunctuation: true
+Outputs:
+  CVApi:
+    Description: URL for application
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cvapi
+    Export:
+      Name: CVApi
