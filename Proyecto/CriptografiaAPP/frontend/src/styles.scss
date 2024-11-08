@@ -2,5 +2,31 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~ngx-bootstrap/datepicker/bs-datepicker.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.theme-blue .bs-datepicker {
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .input-group-text {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .input-group-text:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  .container-full-height {
+      height: 100%;
+  }
+  .b-example-divider {
+      width: 1px;
+      background-color: #000;
+  }
+  
+  html, body { height: 100%; }
+  body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

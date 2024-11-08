@@ -14,14 +14,24 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatIconModule } from '@angular/material/icon';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { RsaTestComponent } from './Pages/rsa-test/rsa-test.component';
+import { HomeComponent } from './Pages/home/home.component';
+import { SidebarComponent } from './Components/sidebar/sidebar.component';
+import { KyberTestComponent } from './Pages/kyber-test/kyber-test.component';
+import { SikeTestComponent } from './Pages/sike-test/sike-test.component';
+import { BikeTestComponent } from './Pages/bike-test/bike-test.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SpinnerComponent,
+    SidebarComponent,
     AESTestComponent,
-    RsaTestComponent
+    RsaTestComponent,
+    HomeComponent,
+    KyberTestComponent,
+    SikeTestComponent,
+    BikeTestComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +45,7 @@ import { RsaTestComponent } from './Pages/rsa-test/rsa-test.component';
     CanvasJSAngularChartsModule
   ],
   providers: [{
-    provide: 'ApiEndpoint', useValue: 'http://localhost:8080/cvultra/webapi/cvuapi/',
+    provide: 'ApiEndpoint', useValue: 'http://localhost:8080/criptografiaApp/webapi/CryptographyTest',
   }, provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,60 @@
+<div class="d-flex flex-column flex-shrink-0 sidebar" style="width: 100%;white-space: nowrap;overflow: hidden;">
+    <a href="/#/home"
+        class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom text-nowrap w-100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock"
+            viewBox="0 0 16 16">
+            <path
+                d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1" />
+        </svg>
+        <span class="fs-5 fw-semibold w-100 ms-2">Criptografía APP</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+        <li class="nav-item mb-1">
+            <a href="http://localhost:4200/#/home" class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
+            Home
+            </a>
+        </li>
+        <li class="mb-1">
+            <button class="btn align-items-center rounded border-0 text-muted d-flex justify-content-between"
+                data-bs-toggle="collapse" data-bs-target="#tradicional-collapse" aria-expanded="false" aria-controls="tradicional-collapse">
+                Criptografía tradicional
+                <span class="ms-2" id="icon">
+                    <i class="bi bi-chevron-down"></i>
+                </span>
+            </button>
+            <div class="collapse" id="tradicional-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                    <li><a href="http://localhost:4200/#/aes"
+                            class="link-dark d-inline-flex text-decoration-none rounded">AES</a></li>
+                    <li><a href="http://localhost:4200/#/rsa"
+                            class="link-dark d-inline-flex text-decoration-none rounded">RSA</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn align-items-center rounded border-0 text-muted d-flex justify-content-between"
+                data-bs-toggle="collapse" data-bs-target="#postcuantica-collapse" aria-expanded="false" aria-controls="postcuantica-collapse">
+                Criptografía post-cuántica
+                <span class="ms-2" id="icon">
+                    <i class="bi bi-chevron-down"></i>
+                </span>
+            </button>
+            <div class="collapse" id="postcuantica-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                    <li><a href="http://localhost:4200/#/kyber"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Kyber</a></li>
+                    <li><a href="http://localhost:4200/#/sike"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Sike</a></li>
+                    <li><a href="http://localhost:4200/#/bike"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Bike</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="nav-item mb-1">
+            <a href="http://localhost:4200/#/gestorMenu" class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
+            Gestor de usuarios
+            </a>
+        </li>
+    </ul>
+</div>
