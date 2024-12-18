@@ -1,0 +1,107 @@
+// Curved menu
+
+.curved-div {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  position: relative;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.curved-div-title {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background-color: #fff;
+  padding: 0 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.botones {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+// Resultados
+
+.title {
+  font-weight: bold;
+}
+
+.message-container {
+  width: 600px;
+  margin: 0 auto;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.message-container2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  gap: 50px;
+
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.canva-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 50px;
+
+  width: 60%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.data {
+  width: 100%;
+  height: fit-content;
+  margin: 0 auto;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+}
+
+.elem-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+canvasjs-chart {
+  width: 100%;
+}

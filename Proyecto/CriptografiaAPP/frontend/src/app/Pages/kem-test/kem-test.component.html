@@ -1,0 +1,68 @@
+<div class="all-content">
+  <div class="message-container" *ngIf="isLoading1 || isLoading2 || isLoading3 || isLoading4 || isLoading5">
+    <h1 class="title">Realizando test para el algoritmo {{ algoritmo }}</h1>
+    <div class="elem-box">
+      <app-spinner></app-spinner>
+    </div>
+    <div class="elem-box">
+      Prueba 1 llave...
+      <mat-icon style="color: red" *ngIf="isLoading1">close</mat-icon><mat-icon style="color: green"
+        *ngIf="!isLoading1">check</mat-icon>
+    </div>
+    <div class="elem-box">
+      Prueba 10 llaves...
+      <mat-icon style="color: red" *ngIf="isLoading2">close</mat-icon><mat-icon style="color: green"
+        *ngIf="!isLoading2">check</mat-icon>
+    </div>
+    <div class="elem-box">
+      Prueba 50 llaves...
+      <mat-icon style="color: red" *ngIf="isLoading3">close</mat-icon><mat-icon style="color: green"
+        *ngIf="!isLoading3">check</mat-icon>
+    </div>
+    <div class="elem-box">
+      Prueba 100 llaves...
+      <mat-icon style="color: red" *ngIf="isLoading4">close</mat-icon><mat-icon style="color: green"
+        *ngIf="!isLoading4">check</mat-icon>
+    </div>
+    <div class="elem-box">
+      Prueba 200 llaves...
+      <mat-icon style="color: red" *ngIf="isLoading5">close</mat-icon><mat-icon style="color: green"
+        *ngIf="!isLoading5">check</mat-icon>
+    </div>
+  </div>
+  <div class="message-container2" *ngIf="
+      !isLoading1 && !isLoading2 && !isLoading3 && !isLoading4 && !isLoading5
+    ">
+    <div class="canva-container">
+      <canvasjs-chart [options]="chartOptions"></canvasjs-chart>
+      <canvasjs-chart [options]="chartOptions2"></canvasjs-chart>
+    </div>
+    <div style="width: 40%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <div class="data card">
+        <h1>Características del algoritmo</h1>
+        <div class="card-content">
+          <p>
+            <strong>Tamaño de Clave Pública:</strong> {{ privateKeySize }} bytes
+          </p>
+          <p>
+            <strong>Tamaño de Clave Privada:</strong> {{ publicKeySize }} bytes
+          </p>
+          <p>
+            <strong>Tamaño del Ciphertext:</strong> {{ ciphertextSize }} bytes
+          </p>
+          <p>
+            <strong>Tiempo de Generación:</strong> {{ tiempoGeneracion }} ms
+          </p>
+          <p><strong>Tiempo de Cifrado:</strong> {{ tiempoCifrado }} ms</p>
+          <p>
+            <strong>Tiempo de Descifrado:</strong> {{ tiempoDescifrado }} ms
+          </p>
+        </div>
+      </div>
+      <div style="height: 50px;"></div>
+      <button onclick="window.location.href='http://localhost:4200/#/home'" class="btn btn-light" style="width: fit-content" type="button">
+        Regresar al menú
+      </button>
+    </div>
+  </div>
+</div>

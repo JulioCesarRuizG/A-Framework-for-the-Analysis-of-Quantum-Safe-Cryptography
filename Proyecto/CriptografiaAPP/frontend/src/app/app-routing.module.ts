@@ -3,9 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AESTestComponent } from './Pages/aes-test/aes-test.component';
 import { RsaTestComponent } from './Pages/rsa-test/rsa-test.component';
 import { HomeComponent } from './Pages/home/home.component';
-import { KyberTestComponent } from './Pages/kyber-test/kyber-test.component';
-import { SikeTestComponent } from './Pages/sike-test/sike-test.component';
-import { BikeTestComponent } from './Pages/bike-test/bike-test.component';
+import { KemTestComponent } from './Pages/kem-test/kem-test.component';
+import { AlgoritmosComponent } from './Pages/algoritmos/algoritmos.component';
 
 const routes: Routes = [
   {
@@ -21,16 +20,12 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'kyber',
-    component: KyberTestComponent
+    path: 'Kem/:algoritmo',
+    component: KemTestComponent
   },
   {
-    path: 'sike',
-    component: SikeTestComponent
-  },
-  {
-    path: 'bike',
-    component: BikeTestComponent
+    path: 'algoritmos',
+    component: AlgoritmosComponent
   },
   {
     path: '',

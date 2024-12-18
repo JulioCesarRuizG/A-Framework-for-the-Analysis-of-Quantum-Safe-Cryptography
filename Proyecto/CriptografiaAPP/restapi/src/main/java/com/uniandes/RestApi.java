@@ -4,41 +4,44 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyFactory;
+import java.lang.reflect.Field;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletContext;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.openquantumsafe.Common;
-import org.openquantumsafe.KEMs;
-import org.openquantumsafe.KeyEncapsulation;
+
+import jakarta.servlet.ServletContext;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import org.bouncycastle.jcajce.SecretKeyWithEncapsulation;
+import org.bouncycastle.jcajce.spec.KEMExtractSpec;
+import org.bouncycastle.jcajce.spec.KEMGenerateSpec;
+import org.bouncycastle.pqc.jcajce.spec.BIKEParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.FrodoParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.McElieceKeyGenParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.NTRUParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.RainbowParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.SABERParameterSpec;
+import org.bouncycastle.pqc.jcajce.spec.SPHINCSPlusParameterSpec;
 
 @Path("/CryptographyTest")
 public class RestApi {
@@ -60,10 +63,10 @@ public class RestApi {
         return sb.toString();
     }
 
-	@Context
-	private ServletContext context;
+    @Context
+    private ServletContext context;
 
-	public static File createDummyFile(String fileName, int sizeInMB) throws IOException {
+    public static File createDummyFile(String fileName, int sizeInMB) throws IOException {
         byte[] buffer = new byte[1024];
         Random random = new Random();
 
@@ -81,21 +84,21 @@ public class RestApi {
 
     // AES  
 
-	@POST
-	@Path("/AES")
-	@Consumes({ MediaType.MULTIPART_FORM_DATA })
-	public Response AES(@FormDataParam("size") String size){
+    @POST
+    @Path("/AES")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    public Response AES(@FormDataParam("size") String size){
         String inName = generateRandomString(10);
         String outName = generateRandomString(10);
-		long initTime = System.currentTimeMillis();
+        long initTime = System.currentTimeMillis();
         long memoryUsed;
         File in;
         File out;
-		try {
-			in = createDummyFile(inName, Integer.parseInt(size));
-			out = new File(outName);
+        try {
+            in = createDummyFile(inName, Integer.parseInt(size));
+            out = new File(outName);
 
-			String algorithm = "AES";
+            String algorithm = "AES";
             KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
             keyGen.init(256);
             SecretKey secretKey = keyGen.generateKey();
@@ -103,16 +106,15 @@ public class RestApi {
             Runtime runtime = Runtime.getRuntime();
             runtime.gc();
             long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-			CifradoAES(secretKey, in, out);
+            CifradoAES(secretKey, in, out);
             long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
             memoryUsed = memoryAfter - memoryBefore;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.ok("Something failed", "text/plain").build();
-		}
-		long endTime = System.currentTimeMillis();
-		int time = (int) (endTime-initTime);
-		System.out.println(time);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok("Something failed", "text/plain").build();
+        }
+        long endTime = System.currentTimeMillis();
+        int time = (int) (endTime-initTime);
         if (out.exists()) {
             if (out.delete()) {
                 System.out.println("File deleted successfully.");
@@ -131,10 +133,10 @@ public class RestApi {
         } else {
             System.out.println("The file does not exist.");
         }
-		return Response.ok(time+","+memoryUsed, "text/plain").build();
-	}
+        return Response.ok(time+","+memoryUsed, "text/plain").build();
+    }
 
-	public static void CifradoAES(SecretKey key, File inputFile, File outputFile) throws Exception {
+    public static void CifradoAES(SecretKey key, File inputFile, File outputFile) throws Exception {
         if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
             throw new IllegalArgumentException("Archivo de entrada no válido.");
         }
@@ -165,9 +167,9 @@ public class RestApi {
 
     // RSA
 
-	@POST
-	@Path("/RSA")
-	@Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @POST
+    @Path("/RSA")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
     public Response RSA(@FormDataParam("size") String size) {
         String inName = generateRandomString(10);
         String outName = generateRandomString(10);
@@ -242,17 +244,172 @@ public class RestApi {
     }
 
     
+    @POST
+    @Path("/PQCryptoAsim")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response cifradoAsim(@FormDataParam("cantidad") String cantidad, @FormDataParam("algorithm") String algorithm) {
 
-    // Kyber
+        Provider bcpqcProvider = Security.getProvider("BCPQC");
+        if (bcpqcProvider == null) {
+            System.out.println("BCPQC provider not found! Ensure it's added to the classpath.");
+        }
 
-    // Sike
+        long initTime = System.currentTimeMillis();
+        long memoryUsed = 0;
+        
+        try {
+            for(int i=0; i<Integer.parseInt(cantidad); i++){
+                Runtime runtime = Runtime.getRuntime();
+                runtime.gc();
+                long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+                KeyPairGenerator keyGen = null;
+                if(algorithm.equals("Kyber1024")){
+                    keyGen = KeyPairGenerator.getInstance("Kyber", "BCPQC");
+                    keyGen.initialize(KyberParameterSpec.kyber1024, new SecureRandom());
+                }
+                else if(algorithm.equals("Kyber768")){
+                    keyGen = KeyPairGenerator.getInstance("Kyber", "BCPQC");
+                    keyGen.initialize(KyberParameterSpec.kyber768, new SecureRandom());
+                }
+                else if(algorithm.equals("Kyber512")){
+                    keyGen = KeyPairGenerator.getInstance("Kyber", "BCPQC");
+                    keyGen.initialize(KyberParameterSpec.kyber512, new SecureRandom());
+                }
+                else if(algorithm.equals("BIKE")){
+                    keyGen = KeyPairGenerator.getInstance("BIKE", "BCPQC");
+                    keyGen.initialize(BIKEParameterSpec.bike192, new SecureRandom());
+                }
+                else if(algorithm.equals("RSA")){
+                    keyGen = KeyPairGenerator.getInstance("RSA");
+                }
+                else if(algorithm.equals("Frodo")){
+                    keyGen = KeyPairGenerator.getInstance("Frodo", "BCPQC");
+                    keyGen.initialize(FrodoParameterSpec.frodokem976aes, new SecureRandom());
+                }
+                else if(algorithm.equals("Saber")){
+                    keyGen = KeyPairGenerator.getInstance("Saber", "BCPQC");
+                    keyGen.initialize(SABERParameterSpec.lightsaberkem256r3, new SecureRandom());
+                }
+                else if(algorithm.equals("NTRU")){
+                    keyGen = KeyPairGenerator.getInstance("NTRU", "BCPQC");
+                    keyGen.initialize(NTRUParameterSpec.ntruhps2048509, new SecureRandom());
+                }
 
-    // Bike
+                KeyPair keyPair = keyGen.generateKeyPair();
+                PublicKey publicKey = keyPair.getPublic();
+                PrivateKey privateKey = keyPair.getPrivate();
+
+                /* 
+                byte[] publicKeyEncoded = keyPair.getPublic().getEncoded();
+                byte[] privateKeyEncoded = keyPair.getPrivate().getEncoded();
+
+                System.out.println("Tamaño de la clave pública: " + publicKeyEncoded.length + " bytes");
+                System.out.println("Tamaño de la clave privada: " + privateKeyEncoded.length + " bytes");
+                */
+
+                if(!algorithm.equals("RSA")){
+                    SecretKeyWithEncapsulation skwe = generateSecretKeySender(publicKey, algorithm);
+                    // System.out.println("Tamaño de la llave cifrada: " + skwe.getEncoded().length + " bytes");
+                    byte[] encapsulation = skwe.getEncapsulation();
+                    generateSecretKeyReciever(privateKey, encapsulation, algorithm);
+                }
+                else{
+                    KeyGenerator aesKeyGen = KeyGenerator.getInstance("AES");
+                    aesKeyGen.init(256);
+                    SecretKey aesKey = aesKeyGen.generateKey();
+                    //System.out.println("Tamaño de la llave: " + 256/8 + " bytes");
+                    //System.out.println("Tamaño de la llave cifrada: " + encryptAESKeyWithRSA(aesKey, publicKey).length + " bytes");
+                }
+                long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+                memoryUsed += memoryAfter - memoryBefore;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok("Something failed", "text/plain").build();
+        }
+        long endTime = System.currentTimeMillis();
+        int time = (int) (endTime - initTime);
+        memoryUsed = memoryUsed / 1024;
+        return Response.ok(time + "," + memoryUsed, "text/plain").build();
+    }
+
+    // Algoritmos
+
+    private static SecretKeyWithEncapsulation generateSecretKeySender(PublicKey publicKey, String algoritmo) throws Exception {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(algoritmo, "BCPQC");
+        KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "AES");
+        keyGenerator.init(kemGenerateSpec);
+        // System.out.println("Tamaño de la llave: " + keyGenerator.generateKey().getEncoded().length + " bytes");
+        return  (SecretKeyWithEncapsulation)keyGenerator.generateKey();
+    }
+
+    private static SecretKey generateSecretKeyReciever(PrivateKey privateKey, byte[] encapsulation, String algoritmo) throws Exception {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(algoritmo, "BCPQC");
+        KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "AES");
+        keyGenerator.init(kemExtractSpec);
+        return (SecretKeyWithEncapsulation)keyGenerator.generateKey();
+    }
+
+    private static byte[] encryptAESKeyWithRSA(SecretKey aesKey, PublicKey publicKey) throws Exception {
+        Cipher rsaCipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding", "BC");
+        rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        return rsaCipher.doFinal(aesKey.getEncoded());
+    }
+
+    // Firmado
+
+    public static void Firmado() throws Exception{
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("Rainbow", "BCPQC");
+        keyPairGen.initialize(RainbowParameterSpec.rainbowIIIclassic);
+        KeyPair keyPairRainbow = keyPairGen.generateKeyPair();
+
+        String mensaje = "Mensaje para firmar con Rainbow";
+        byte[] firmaRainbow = firmarRainbow(keyPairRainbow.getPrivate(), mensaje.getBytes());
+
+        boolean verificadoRainbow = verificarRainbow(keyPairRainbow.getPublic(), mensaje.getBytes(), firmaRainbow);
+
+        keyPairGen = KeyPairGenerator.getInstance("SPHINCSPlus", "BCPQC");
+        keyPairGen.initialize(SPHINCSPlusParameterSpec.sha2_256f);
+        KeyPair keyPairSPHINCS = keyPairGen.generateKeyPair();
+
+        byte[] firmaSPHINCS = firmarSPHINCS(keyPairSPHINCS.getPrivate(), mensaje.getBytes());
+
+        boolean verificadoSPHINCS = verificarSPHINCS(keyPairSPHINCS.getPublic(), mensaje.getBytes(), firmaSPHINCS);
+    }
 
     // Rainbow
 
-    // Sphincs+
+    public static byte[] firmarRainbow(PrivateKey privateKey, byte[] data) throws Exception {
+        Signature signature = Signature.getInstance("Rainbow", "BCPQC");
+        signature.initSign(privateKey);
+        signature.update(data);
+        return signature.sign();
+    }
     
+    public static boolean verificarRainbow(PublicKey publicKey, byte[] data, byte[] firma) throws Exception {
+        Signature signature = Signature.getInstance("Rainbow", "BCPQC");
+        signature.initVerify(publicKey);
+        signature.update(data);
+        return signature.verify(firma);
+    }
+
+    // Sphincs+
+
+    public static byte[] firmarSPHINCS(PrivateKey privateKey, byte[] data) throws Exception {
+        Signature signature = Signature.getInstance("SPHINCSPlus", "BCPQC");
+        signature.initSign(privateKey);
+        signature.update(data);
+        return signature.sign();
+    }
+    
+    public static boolean verificarSPHINCS(PublicKey publicKey, byte[] data, byte[] firma) throws Exception {
+        Signature signature = Signature.getInstance("SPHINCSPlus", "BCPQC");
+        signature.initVerify(publicKey);
+        signature.update(data);
+        return signature.verify(firma);
+    }
+    
+    /*
     @POST
     @Path("/PQCrypto")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
@@ -392,4 +549,5 @@ public class RestApi {
 
         return Response.ok(time + "," + memoryUsed, "text/plain").build();
     }
+    */
 }

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-shrink-0 sidebar" style="width: 100%;white-space: nowrap;overflow: hidden;">
+<div class="d-flex flex-column flex-shrink-0 sidebar" style="width: 100%; white-space: nowrap; overflow: hidden">
     <a href="/#/home"
         class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom text-nowrap w-100">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock"
@@ -10,13 +10,15 @@
     </a>
     <ul class="list-unstyled ps-0">
         <li class="nav-item mb-1">
-            <a href="http://localhost:4200/#/home" class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
-            Home
+            <a href="http://localhost:4200/#/home"
+                class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
+                Home
             </a>
         </li>
         <li class="mb-1">
             <button class="btn align-items-center rounded border-0 text-muted d-flex justify-content-between"
-                data-bs-toggle="collapse" data-bs-target="#tradicional-collapse" aria-expanded="false" aria-controls="tradicional-collapse">
+                data-bs-toggle="collapse" data-bs-target="#tradicional-collapse" aria-expanded="false"
+                aria-controls="tradicional-collapse">
                 Criptografía tradicional
                 <span class="ms-2" id="icon">
                     <i class="bi bi-chevron-down"></i>
@@ -24,16 +26,21 @@
             </button>
             <div class="collapse" id="tradicional-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
-                    <li><a href="http://localhost:4200/#/aes"
-                            class="link-dark d-inline-flex text-decoration-none rounded">AES</a></li>
-                    <li><a href="http://localhost:4200/#/rsa"
-                            class="link-dark d-inline-flex text-decoration-none rounded">RSA</a></li>
+                    <li>
+                        <a href="http://localhost:4200/#/aes"
+                            class="link-dark d-inline-flex text-decoration-none rounded">AES</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'RSA']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">RSA</a>
+                    </li>
                 </ul>
             </div>
         </li>
         <li class="mb-1">
             <button class="btn align-items-center rounded border-0 text-muted d-flex justify-content-between"
-                data-bs-toggle="collapse" data-bs-target="#postcuantica-collapse" aria-expanded="false" aria-controls="postcuantica-collapse">
+                data-bs-toggle="collapse" data-bs-target="#postcuantica-collapse" aria-expanded="false"
+                aria-controls="postcuantica-collapse">
                 Criptografía post-cuántica
                 <span class="ms-2" id="icon">
                     <i class="bi bi-chevron-down"></i>
@@ -41,19 +48,60 @@
             </button>
             <div class="collapse" id="postcuantica-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
-                    <li><a href="http://localhost:4200/#/kyber"
-                            class="link-dark d-inline-flex text-decoration-none rounded">Kyber</a></li>
-                    <li><a href="http://localhost:4200/#/sike"
-                            class="link-dark d-inline-flex text-decoration-none rounded">Sike</a></li>
-                    <li><a href="http://localhost:4200/#/bike"
-                            class="link-dark d-inline-flex text-decoration-none rounded">Bike</a></li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'Kyber1024']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Kyber 1024</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'Kyber768']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Kyber 768</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'Kyber512']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Kyber 512</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'BIKE']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Bike</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'Frodo']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Frodo</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'Saber']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Saber</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/Kem', 'NTRU']"
+                            class="link-dark d-inline-flex text-decoration-none rounded">NTRU</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn align-items-center rounded border-0 text-muted d-flex justify-content-between"
+                data-bs-toggle="collapse" data-bs-target="#pruebas-collapse" aria-expanded="false"
+                aria-controls="pruebas-collapse">
+                Pruebas conjuntas
+                <span class="ms-2" id="icon">
+                    <i class="bi bi-chevron-down"></i>
+                </span>
+            </button>
+            <div class="collapse" id="pruebas-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                    <li>
+                        <a href="http://localhost:4200/#/algoritmos"
+                            class="link-dark d-inline-flex text-decoration-none rounded">Algoritmos de cifrado</a>
+                    </li>
                 </ul>
             </div>
         </li>
         <li class="border-top my-3"></li>
         <li class="nav-item mb-1">
-            <a href="http://localhost:4200/#/gestorMenu" class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
-            Gestor de usuarios
+            <a href="http://localhost:4200/#/gestorMenu"
+                class="btn align-items-center rounded border-0 d-flex justify-content-between link-dark text-decoration-none">
+                Gestor de usuarios
             </a>
         </li>
     </ul>

@@ -16,9 +16,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { RsaTestComponent } from './Pages/rsa-test/rsa-test.component';
 import { HomeComponent } from './Pages/home/home.component';
 import { SidebarComponent } from './Components/sidebar/sidebar.component';
-import { KyberTestComponent } from './Pages/kyber-test/kyber-test.component';
-import { SikeTestComponent } from './Pages/sike-test/sike-test.component';
-import { BikeTestComponent } from './Pages/bike-test/bike-test.component';
+import { KemTestComponent } from './Pages/kem-test/kem-test.component';
+import { AlgoritmosComponent } from './Pages/algoritmos/algoritmos.component';
 
 
 @NgModule({
@@ -29,9 +28,8 @@ import { BikeTestComponent } from './Pages/bike-test/bike-test.component';
     AESTestComponent,
     RsaTestComponent,
     HomeComponent,
-    KyberTestComponent,
-    SikeTestComponent,
-    BikeTestComponent
+    KemTestComponent,
+    AlgoritmosComponent
   ],
   imports: [
     CommonModule,

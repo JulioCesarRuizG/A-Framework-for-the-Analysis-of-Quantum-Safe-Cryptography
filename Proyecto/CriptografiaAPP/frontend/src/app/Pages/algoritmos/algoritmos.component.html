@@ -1,0 +1,137 @@
+<div class="container mt-5">
+    <div class="progress mb-4" *ngIf="terminado == false && enProceso == false">
+        <div id="progress-bar" class="progress-bar" role="progressbar" [style.width.%]="progress"
+            [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <form class="container mt-2" *ngIf="terminado == false && enProceso == false">
+        <div *ngIf="currentStep === 0">
+            <div class="curved-div">
+                <div class="curved-div-title">Seleccione la prueba a realizar</div>
+                <div class="botones">
+                    <button class="btn btn-primary" style="width: fit-content" type="button"
+                        (click)="progressButton('algoritmos')">
+                        Algoritmos de cifrado
+                    </button>
+                    <button class="btn btn-primary" style="width: fit-content" type="button"
+                        (click)="progressButton('firma')">
+                        Firma digital
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="currentStep === 1">
+            <div class="curved-div">
+                <div class="curved-div-title">Seleccione los elementos a probar</div>
+                <ul class="list-group">
+                    <li *ngFor="let item of items; let i = index" class="list-group-item" [class.active]="isSelected(i)"
+                        (click)="toggleSelection(i)">
+                        {{ item }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div *ngIf="currentStep === 2">
+            <div class="curved-div">
+                <div class="curved-div-title">Seleccione los elementos a probar</div>
+                <ul class="list-group">
+                    <li *ngFor="let test of tests; let i = index" class="list-group-item"
+                        [class.active]="selectedTestId === i" (click)="selectItem(i)">
+                        {{ test }}
+                    </li>
+                </ul>
+                <div *ngIf="selectedTest === 'Otro'" class="mt-3">
+                    <label for="otro" class="form-label">Otra cantidad (solo el número):</label>
+                    <input type="text" id="otro" class="form-control" [(ngModel)]="otro"
+                        placeholder="Escribe aquí..." />
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" id="prevBtn" class="btn btn-secondary" (click)="prevStep()">
+                {{ currentStep == 0 ? "Cancelar" : "Anterior" }}
+            </button>
+            <button type="button" id="nextBtn" class="btn btn-primary" (click)="nextStep()"
+                [disabled]="currentStep == 0 || (currentStep == 1 && selectedItems.size === 0) || (currentStep == 2 && (selectedTest == null || (selectedTest === 'Otro' && !otro)))">
+                {{ currentStep < totalSteps ? "Siguiente" : "Aceptar" }} </button>
+        </div>
+    </form>
+    <div class="message-container" *ngIf="terminado == false && enProceso == true">
+        <h1 class="title">Realizando conjunto de pruebas</h1>
+        <div class="elem-box">
+            <app-spinner></app-spinner>
+        </div>
+        <div *ngFor="let selectedElement of selectedElements; let i = index" class="elem-box">
+            {{ selectedElement }}
+            <mat-icon 
+              style="color: red" 
+              *ngIf="i >= estado">
+              close
+            </mat-icon>
+            <mat-icon 
+              style="color: green" 
+              *ngIf="i < estado">
+              check
+            </mat-icon>
+          </div>
+    </div>
+    <div class="message-container2" *ngIf="terminado == true && enProceso == false">
+        <div class="canva-container">
+            <canvasjs-chart [options]="chartOptions"></canvasjs-chart>
+            <canvasjs-chart [options]="chartOptions2"></canvasjs-chart>
+        </div>
+        <div
+            style="width: 40%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="data card">
+                <h1>Características de los algoritmos</h1>
+                <br>
+                <div class="card-content">
+                    <p>
+                        <strong>Mejor algoritmo en tiempo:</strong> {{ mejorTiempoLabel }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mejor algoritmo en espacio:</strong> {{ mejorEspacioLabel }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Menor tamaño de llave privada:</strong> {{ menorTamanioLlavePrivada }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mayor tamaño de llave privada:</strong> {{ mayorTamanioLlavePrivada}}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Menor tamaño de llave pública:</strong> {{ menorTamanioLlavePublica }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mayor tamaño de llave pública:</strong> {{ mayorTamanioLlavePublica }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mayor tamaño de ciphertext:</strong> {{ mayorTamanioCiphertext }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mejor tiempo de Generación:</strong> {{ mejorTiempoGeneracion }}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mejor tiempo de Cifrado:</strong> {{ mejorTiempoCifrado}}
+                    </p>
+                    <br>
+                    <p>
+                        <strong>Mejor tiempo de Descifrado:</strong> {{ mejorTiempoDescifrado }}
+                    </p>
+                </div>
+            </div>
+            <div style="height: 50px;"></div>
+            <button onclick="window.location.href='http://localhost:4200/#/home'" class="btn btn-light"
+                style="width: fit-content" type="button">
+                Regresar al menú
+            </button>
+        </div>
+    </div>
+</div>

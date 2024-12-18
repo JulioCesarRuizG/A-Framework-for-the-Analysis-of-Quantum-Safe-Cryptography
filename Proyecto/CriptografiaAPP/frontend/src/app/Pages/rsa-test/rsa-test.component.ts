@@ -28,13 +28,16 @@ export class RsaTestComponent {
   constructor() { }
 
   async ngOnInit() {
-    [this.time1, this.memory1] = await this.onRSA("1")
+    // For cache:
+    await this.onRSA("10");
+
+    [this.time1, this.memory1] = await this.onRSA("10")
     this.isLoading1 = false;
-    [this.time2, this.memory2] = await this.onRSA("10")
+    [this.time2, this.memory2] = await this.onRSA("100")
     this.isLoading2 = false;
-    [this.time3, this.memory3] = await this.onRSA("100")
+    [this.time3, this.memory3] = await this.onRSA("1000")
     this.isLoading3 = false;
-    [this.time4, this.memory4] = await this.onRSA("1000")
+    [this.time4, this.memory4] = await this.onRSA("10000")
     this.isLoading4 = false;
    // this.time5 = await this.onAES("2000")
     this.isLoading5 = false;
@@ -98,9 +101,10 @@ export class RsaTestComponent {
     return await this.getRSARequest(await this.getRSABody(size));
   }
 
-  public async getRSABody(size): Promise<FormData> {
+  public async getRSABody(cantidad): Promise<FormData> {
     const formData = new FormData();
-    formData.append("size", size);
+    formData.append("cantidad", cantidad);
+    formData.append("algorithm", "RSA");
     return formData;
   }
 
@@ -108,7 +112,7 @@ export class RsaTestComponent {
     let response;
     let res: string[] | undefined;
     try {
-      response = await fetch("http://localhost:8080/criptografiaApp/webapi/CryptographyTest/RSA", {
+      response = await fetch("http://localhost:8080/criptografiaApp/webapi/CryptographyTest/PQCryptoAsim", {
         method: "POST",
         body
       });
