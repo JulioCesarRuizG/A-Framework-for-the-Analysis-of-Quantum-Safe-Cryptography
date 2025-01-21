@@ -42,7 +42,7 @@ export class KemTestComponent {
       this.algoritmo = params.get('algoritmo');
 
       switch (this.algoritmo) {
-        case 'kyber512':
+        case 'Kyber512':
           this.publicKeySize = 800;
           this.privateKeySize = 1632;
           this.ciphertextSize = 768;
@@ -50,7 +50,7 @@ export class KemTestComponent {
           this.tiempoCifrado = "~0.02";
           this.tiempoDescifrado = "~0.02";
           break;
-        case 'kyber768':
+        case 'Kyber768':
           this.publicKeySize = 1184;
           this.privateKeySize = 2400;
           this.ciphertextSize = 1088;
@@ -58,7 +58,7 @@ export class KemTestComponent {
           this.tiempoCifrado = "~0.03";
           this.tiempoDescifrado = "~0.03";
           break;
-        case 'kyber1024':
+        case 'Kyber1024':
           this.publicKeySize = 1568;
           this.privateKeySize = 3168;
           this.ciphertextSize = 1568;
