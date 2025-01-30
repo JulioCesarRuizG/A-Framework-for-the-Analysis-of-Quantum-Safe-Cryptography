@@ -74,13 +74,13 @@ export class KemTestComponent {
           this.tiempoCifrado = "~0.20";
           this.tiempoDescifrado = "~0.20";
           break;
-        case 'RSA':
-          this.publicKeySize = 3107;
-          this.privateKeySize = 6228;
-          this.ciphertextSize = 3107;
-          this.tiempoGeneracion = "~0.15";
-          this.tiempoCifrado = "~0.20";
-          this.tiempoDescifrado = "~0.20";
+        case 'Diffie-Hellman':
+          this.publicKeySize = 2048; 
+          this.privateKeySize = 2048;
+          this.ciphertextSize = 2048;
+          this.tiempoGeneracion = "~0.10";
+          this.tiempoCifrado = 	"~0.20";
+          this.tiempoDescifrado = "~0.20"
           break;
         case 'Frodo':
           this.publicKeySize = 9616;

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
@@ -16,8 +18,10 @@ import java.security.Signature;
 import java.util.Random;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
@@ -82,167 +86,6 @@ public class RestApi {
         return file;
     }
 
-    // AES  
-
-    @POST
-    @Path("/AES")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
-    public Response AES(@FormDataParam("size") String size){
-        String inName = generateRandomString(10);
-        String outName = generateRandomString(10);
-        long initTime = System.currentTimeMillis();
-        long memoryUsed;
-        File in;
-        File out;
-        try {
-            in = createDummyFile(inName, Integer.parseInt(size));
-            out = new File(outName);
-
-            String algorithm = "AES";
-            KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
-            keyGen.init(256);
-            SecretKey secretKey = keyGen.generateKey();
-
-            Runtime runtime = Runtime.getRuntime();
-            runtime.gc();
-            long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-            CifradoAES(secretKey, in, out);
-            long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
-            memoryUsed = memoryAfter - memoryBefore;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok("Something failed", "text/plain").build();
-        }
-        long endTime = System.currentTimeMillis();
-        int time = (int) (endTime-initTime);
-        if (out.exists()) {
-            if (out.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("The file does not exist.");
-        }
-        if (in.exists()) {
-            if (in.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("The file does not exist.");
-        }
-        return Response.ok(time+","+memoryUsed, "text/plain").build();
-    }
-
-    public static void CifradoAES(SecretKey key, File inputFile, File outputFile) throws Exception {
-        if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
-            throw new IllegalArgumentException("Archivo de entrada no válido.");
-        }
-    
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-    
-        try (FileInputStream fis = new FileInputStream(inputFile);
-             FileOutputStream fos = new FileOutputStream(outputFile)) {
-    
-            byte[] buffer = new byte[1024];
-            byte[] outputBytes;
-            int bytesRead;
-    
-            while ((bytesRead = fis.read(buffer)) != -1) {
-                outputBytes = cipher.update(buffer, 0, bytesRead);
-                if (outputBytes != null) {
-                    fos.write(outputBytes);
-                }
-            }
-    
-            outputBytes = cipher.doFinal();
-            if (outputBytes != null) {
-                fos.write(outputBytes);
-            }
-        }
-    }
-
-    // RSA
-
-    @POST
-    @Path("/RSA")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
-    public Response RSA(@FormDataParam("size") String size) {
-        String inName = generateRandomString(10);
-        String outName = generateRandomString(10);
-        long initTime = System.currentTimeMillis();
-        long memoryUsed;
-        File in;
-        File out;
-        try {
-            in = createDummyFile(inName, Integer.parseInt(size));
-            out = new File(outName);
-
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(2048);
-            KeyPair keyPair = keyGen.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-            Runtime runtime = Runtime.getRuntime();
-            runtime.gc();
-            long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-            CifradoRSA(publicKey, in, out);
-            long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
-            memoryUsed = memoryAfter - memoryBefore;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok("Something failed", "text/plain").build();
-        }
-        long endTime = System.currentTimeMillis();
-        int time = (int) (endTime - initTime);
-        System.out.println(time);
-
-        if (out.exists()) {
-            if (out.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("The file does not exist.");
-        }
-        if (in.exists()) {
-            if (in.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("The file does not exist.");
-        }
-        return Response.ok(time+","+memoryUsed, "text/plain").build();
-    }
-
-    public static void CifradoRSA(PublicKey publicKey, File inputFile, File outputFile) throws Exception {
-        if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
-            throw new IllegalArgumentException("Archivo de entrada no válido.");
-        }
-
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-        try (FileInputStream fis = new FileInputStream(inputFile);
-                FileOutputStream fos = new FileOutputStream(outputFile)) {
-
-                byte[] buffer = new byte[245]; // Tamaño máximo para RSA de 2048 bits con relleno
-                byte[] encryptedBytes;
-                int bytesRead;
-
-                // Leer el archivo y cifrar en bloques de 245 bytes
-                while ((bytesRead = fis.read(buffer)) != -1) {
-                    encryptedBytes = cipher.doFinal(buffer, 0, bytesRead);
-                    fos.write(encryptedBytes);
-                }
-            }
-    }
-
     
     @POST
     @Path("/PQCryptoAsim")
@@ -279,8 +122,8 @@ public class RestApi {
                     keyGen = KeyPairGenerator.getInstance("BIKE", "BCPQC");
                     keyGen.initialize(BIKEParameterSpec.bike192, new SecureRandom());
                 }
-                else if(algorithm.equals("RSA")){
-                    keyGen = KeyPairGenerator.getInstance("RSA");
+                else if(algorithm.equals("Diffie-Hellman")){
+                    keyGen = KeyPairGenerator.getInstance("DH");
                 }
                 else if(algorithm.equals("Frodo")){
                     keyGen = KeyPairGenerator.getInstance("Frodo", "BCPQC");
@@ -307,18 +150,25 @@ public class RestApi {
                 System.out.println("Tamaño de la clave privada: " + privateKeyEncoded.length + " bytes");
                 */
 
-                if(!algorithm.equals("RSA")){
+                if(!algorithm.equals("Diffie-Hellman")){
                     SecretKeyWithEncapsulation skwe = generateSecretKeySender(publicKey, algorithm);
                     // System.out.println("Tamaño de la llave cifrada: " + skwe.getEncoded().length + " bytes");
                     byte[] encapsulation = skwe.getEncapsulation();
                     generateSecretKeyReciever(privateKey, encapsulation, algorithm);
                 }
                 else{
-                    KeyGenerator aesKeyGen = KeyGenerator.getInstance("AES");
-                    aesKeyGen.init(256);
-                    SecretKey aesKey = aesKeyGen.generateKey();
-                    //System.out.println("Tamaño de la llave: " + 256/8 + " bytes");
-                    //System.out.println("Tamaño de la llave cifrada: " + encryptAESKeyWithRSA(aesKey, publicKey).length + " bytes");
+                    // Paso 1: Generar pares de claves Diffie-Hellman para A y B
+                    keyGen.initialize(2048);
+                    KeyPair A = keyGen.generateKeyPair();
+                    KeyPair B = keyGen.generateKeyPair();
+
+                    // Paso 2: Intercambiar claves públicas y generar el secreto compartido
+                    byte[] ASharedSecret = generateSharedSecret(A, B.getPublic());
+                    byte[] BSharedSecret = generateSharedSecret(B, A.getPublic());
+
+                    // Paso 3: Derivar una clave AES de 256 bits a partir del secreto compartido
+                    deriveAESKey(ASharedSecret);
+                    deriveAESKey(BSharedSecret);
                 }
                 long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
                 memoryUsed += memoryAfter - memoryBefore;
@@ -331,6 +181,19 @@ public class RestApi {
         int time = (int) (endTime - initTime);
         memoryUsed = memoryUsed / 1024;
         return Response.ok(time + "," + memoryUsed, "text/plain").build();
+    }
+
+    private static byte[] generateSharedSecret(KeyPair keyPair, PublicKey publicKey) throws Exception {
+        KeyAgreement keyAgreement = KeyAgreement.getInstance("DH");
+        keyAgreement.init(keyPair.getPrivate());
+        keyAgreement.doPhase(publicKey, true);
+        return keyAgreement.generateSecret();
+    }
+
+    private static SecretKey deriveAESKey(byte[] sharedSecret) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] keyBytes = digest.digest(sharedSecret);
+        return new SecretKeySpec(keyBytes, "AES");
     }
 
     // Algoritmos
@@ -348,12 +211,6 @@ public class RestApi {
         KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "AES");
         keyGenerator.init(kemExtractSpec);
         return (SecretKeyWithEncapsulation)keyGenerator.generateKey();
-    }
-
-    private static byte[] encryptAESKeyWithRSA(SecretKey aesKey, PublicKey publicKey) throws Exception {
-        Cipher rsaCipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding", "BC");
-        rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return rsaCipher.doFinal(aesKey.getEncoded());
     }
 
     // Firmado

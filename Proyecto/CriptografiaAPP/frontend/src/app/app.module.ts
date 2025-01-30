@@ -8,12 +8,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SpinnerComponent } from './Components/spinner/spinner.component';
-import { AESTestComponent } from './Pages/aes-test/aes-test.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { MatIconModule } from '@angular/material/icon';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
-import { RsaTestComponent } from './Pages/rsa-test/rsa-test.component';
 import { HomeComponent } from './Pages/home/home.component';
 import { SidebarComponent } from './Components/sidebar/sidebar.component';
 import { KemTestComponent } from './Pages/kem-test/kem-test.component';
@@ -25,8 +23,6 @@ import { AlgoritmosComponent } from './Pages/algoritmos/algoritmos.component';
     AppComponent,
     SpinnerComponent,
     SidebarComponent,
-    AESTestComponent,
-    RsaTestComponent,
     HomeComponent,
     KemTestComponent,
     AlgoritmosComponent

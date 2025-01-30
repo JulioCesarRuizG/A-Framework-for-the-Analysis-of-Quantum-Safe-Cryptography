@@ -59,7 +59,7 @@ export class AlgoritmosComponent {
   progressButton(val) {
     this.seleccionado = val
     if (this.seleccionado == 'algoritmos') {
-      this.items = ["Kyber1024", "Kyber768", "Kyber512", "BIKE", "Frodo", "Saber", "NTRU", "RSA"];
+      this.items = ["Kyber1024", "Kyber768", "Kyber512", "BIKE", "Frodo", "Saber", "NTRU", "Diffie-Hellman"];
       this.tests = ["5 llaves", "10 llaves", "20 llaves", "50 llaves", 'Otro'];
     }
     else {
@@ -211,11 +211,11 @@ export class AlgoritmosComponent {
         tiempoDescifrado: "~0.20"
       },
       {
-        name: 'RSA',
-        publicKeySize: 3107,
-        privateKeySize: 6228,
-        ciphertextSize: 3107,
-        tiempoGeneracion: "~0.15",
+        name: 'Diffie-Hellman',
+        publicKeySize: 2048,
+        privateKeySize: 2048,
+        ciphertextSize: 2048,
+        tiempoGeneracion: "~0.10",
         tiempoCifrado: "~0.20",
         tiempoDescifrado: "~0.20"
       },
